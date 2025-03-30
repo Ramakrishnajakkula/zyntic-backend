@@ -1,5 +1,27 @@
 const mongoose = require('mongoose');
 
+const ratingSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  value: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 5
+  },
+  comment: {
+    type: String,
+    trim: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,11 +42,12 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  rating: {
+  ratings: [ratingSchema],
+  averageRating: {
     type: Number,
+    default: 0,
     min: 0,
-    max: 5,
-    default: 0
+    max: 5
   }
 }, { timestamps: true });
 

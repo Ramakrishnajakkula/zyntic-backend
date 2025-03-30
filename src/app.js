@@ -6,10 +6,10 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// CORS configuration
+// CORS configuration - allow all origins during development
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173',"https://ramakrishnajakkula.github.io"],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: '*', // Allow all origins for development
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
@@ -20,26 +20,26 @@ app.use(express.json());
 
 // Root route for health check
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'API is running' });
+  res.status(200).json({ 
+    message: 'API is running',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
-// Test route
-app.get('/api/test', (req, res) => {
-  try {
-    res.status(200).json({ message: 'Test endpoint is working' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Debug route to check authentication
+app.get('/api/check-auth', require('./middleware/auth').authenticate, (req, res) => {
+  res.status(200).json({
+    authenticated: true,
+    user: req.user
+  });
 });
 
 // Error handling middleware
 app.use(errorHandler);
-
-// IMPORTANT: Remove MongoDB connection code from app.js
-// It should only be in server.js
 
 module.exports = app;
