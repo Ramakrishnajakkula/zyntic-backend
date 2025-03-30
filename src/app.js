@@ -1,36 +1,36 @@
-// Update app.js
 const express = require('express');
-const mongoose = require('mongoose');
+const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const errorHandler = require('./middleware/errorHandler');
-const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
+
+// CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173'], // Add your frontend URLs
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://zynetic.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allow cookies to be sent with requests
+  credentials: true,
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
-
-// Middleware
 app.use(express.json());
+
+// Root route for health check
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'API is running' });
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
+// Test route
 app.get('/api/test', (req, res) => {
   try {
-    res.json({
-      message: 'API is working!',
-      timestamp: new Date().toISOString()
-    });
+    res.status(200).json({ message: 'Test endpoint is working' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -39,16 +39,7 @@ app.get('/api/test', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Define a fallback MongoDB URI if environment variable is not set
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ramakrishna:Anji%40178909@cluster0.ifqbcou.mongodb.net/SPC?retryWrites=true&w=majority';
-
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// IMPORTANT: Remove MongoDB connection code from app.js
+// It should only be in server.js
 
 module.exports = app;

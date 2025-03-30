@@ -9,19 +9,24 @@ const PORT = process.env.PORT || 5000;
 // Define a fallback MongoDB URI if environment variable is not set
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ramakrishna:Anji%40178909@cluster0.ifqbcou.mongodb.net/SPC?retryWrites=true&w=majority';
 
-
-
+// Handle MongoDB connection
 mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
 })
 .then(() => {
-    console.log('Connected to the database');
+  console.log('Connected to MongoDB');
+  // Only start the server if running locally (not on Vercel)
+  if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+      console.log(`Server is running on http://localhost:${PORT}`);
     });
+  }
 })
 .catch(err => {
-    console.error('Database connection error:', err);
+  console.error('MongoDB connection error:', err);
 });
+
+// This is required for Vercel
+module.exports = app;
