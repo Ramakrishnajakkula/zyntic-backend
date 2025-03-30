@@ -8,7 +8,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://zynetic.vercel.app'],
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://zynetic.vercel.app',"https://ramakrishnajakkula.github.io/"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
