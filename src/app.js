@@ -25,6 +25,17 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
+app.get('/api/test', (req, res) => {
+  try {
+    res.json({
+      message: 'API is working!',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
