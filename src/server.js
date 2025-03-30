@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 5000;
 // Define a fallback MongoDB URI if environment variable is not set
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ramakrishna:Anji%40178909@cluster0.ifqbcou.mongodb.net/SPC?retryWrites=true&w=majority';
 
+app.use('/api', require('./routes/authRoutes'));
+app.use('/api', require('./routes/productRoutes'));
+
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
